@@ -12,17 +12,18 @@ export default function SignUp({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordStrengthMessage, setPasswordStrengthMessage] = useState('');
+  const [hasMinLength, setHasMinLength] = useState(false);
+  const [hasUppercase, setHasUppercase] = useState(false);
+  const [hasLowercase, setHasLowercase] = useState(false);
+  const [hasNumber, setHasNumber] = useState(false);
+  const [passwordInputFocused, setPasswordInputFocused] = useState(false);
 
 const handlePasswordChange = (text) => {
   setPassword(text);
-  if (text.length < 6) {
-    setPasswordStrengthMessage("Débil: La contraseña debe tener al menos 6 caracteres.");
-  } else if (!/(?=.*[a-z])/.test(text) || !/(?=.*[A-Z])/.test(text) || !/(?=.*\d)/.test(text)) {
-    setPasswordStrengthMessage("Media: Incluye mayúsculas, minúsculas y números.");
-  } else {
-    setPasswordStrengthMessage("Fuerte: Contraseña segura.");
-  }
+  setHasMinLength(text.length >= 6);
+  setHasUppercase(/(?=.*[A-Z])/.test(text));
+  setHasLowercase(/(?=.*[a-z])/.test(text));
+  setHasNumber(/(?=.*\d)/.test(text));
 };
   const handleSignUp = async () => {
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
@@ -121,13 +122,32 @@ const handlePasswordChange = (text) => {
           placeholder="Ingrese su contraseña"
           value={password}
           onChangeText={handlePasswordChange}
+          onFocus={() => setPasswordInputFocused(true)}
+          onBlur={() => setPasswordInputFocused(false)}
           secureTextEntry={!showPassword}
         />
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
           <FontAwesome name={showPassword ? "eye-slash" : "eye"} style={styles.iconeye} size={20} color="#000000ff" />
         </TouchableOpacity>
       </View>
-        <Text style={styles.passwordStrength}>{passwordStrengthMessage}</Text>
+      {passwordInputFocused && (
+        <View style={styles.passwordChecklistContainer}>
+          <Text style={styles.passwordChecklistTitle}>La contraseña debe tener:</Text>
+          <Text style={[styles.passwordChecklistItem, { color: hasMinLength ? 'green' : 'red' }]}>
+            <FontAwesome name={hasMinLength ? "check-circle" : "times-circle"} size={14} /> +6 caracteres
+          </Text>
+          <Text style={[styles.passwordChecklistItem, { color: hasUppercase ? 'green' : 'red' }]}>
+            <FontAwesome name={hasUppercase ? "check-circle" : "times-circle"} size={14} /> Mayúscula
+          </Text>
+          <Text style={[styles.passwordChecklistItem, { color: hasLowercase ? 'green' : 'red' }]}>
+            <FontAwesome name={hasLowercase ? "check-circle" : "times-circle"} size={14} /> Minúscula
+          </Text>
+          <Text style={[styles.passwordChecklistItem, { color: hasNumber ? 'green' : 'red' }]}>
+            <FontAwesome name={hasNumber ? "check-circle" : "times-circle"} size={14} /> Número
+          </Text>
+        </View>
+      )}
+
       <Text style={styles.label}>Confirmar Contraseña</Text>
       <View style={styles.inputContainer}>
         <FontAwesome name="lock" size={20} color="#ccc" style={styles.icon} />
@@ -194,14 +214,21 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 8 ,
   },
-  passwordStrength: {
-  alignSelf: 'flex-start',
-  fontSize: 12,
-  marginTop: -5,
-  marginBottom: 10,
-  marginLeft: 5,
-  color: 'gray', // Puedes cambiar el color según la fortaleza
+  passwordChecklistContainer: {
+    alignSelf: 'flex-start',
+    marginTop: 0,
+    marginLeft: 5,
   },
+  passwordChecklistTitle: {
+    fontSize: 12,
+    marginBottom: 5,
+    color:'#333333ff'
+  },
+  passwordChecklistItem: {
+    fontSize: 10,
+    marginBottom: 0,
+  },
+
   icon: {
     marginRight: 10,
     marginLeft: 10,
