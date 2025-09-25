@@ -90,18 +90,13 @@ const handlePasswordChange = (text) => {
   };
 
   return (
-    // 1. ELIMINA KeyboardAvoidingView, ya no es necesario.
-    // 2. Haz que el KeyboardAwareScrollView sea el contenedor principal con flex: 1.
+    
     <KeyboardAwareScrollView
-      style={styles.container} // Asegúrate que styles.container tenga { flex: 1 }
+      style={styles.container} 
       contentContainerStyle={styles.scrollContent}
-      
-      // *** AJUSTA ESTOS VALORES PARA UN MEJOR DESPLAZAMIENTO ***
-      extraScrollHeight={Platform.OS === 'ios' ? 200 : 180} // Ajuste fino para el salto (menos es más)
-      enableOnAndroid={true} // Siempre déjalo en true
-      enableAutomaticScroll={true} // Permite el scroll automático al enfocar
-      
-      // Asegúrate de que el logo/título no se muevan de forma extraña al cargar
+      extraScrollHeight={Platform.OS === 'ios' ? 200 : 180} 
+      enableOnAndroid={true}
+      enableAutomaticScroll={true} // Permite el scroll automático 
       keyboardOpeningTime={0} 
     >
 
