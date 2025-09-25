@@ -27,9 +27,9 @@ function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={isAuthenticated ? "Home" : "Login"}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Login" component={Login} options={{title:'Iniciar sesion', headerLeft: () => null,}}/>
+        <Stack.Screen name="SignUp" component={SignUp} options={{title:'Registrarse',}}/>
+        <Stack.Screen name="Inicio" component={Home} options={{title:'Inicio',}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

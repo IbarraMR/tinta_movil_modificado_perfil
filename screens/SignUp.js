@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image,Keybo
 import { FontAwesome } from '@expo/vector-icons';
 import { auth } from '../src/config/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useModal, useToast } from '../componentes/Alert';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function SignUp({ navigation }) {
   const [firstName, setFirstName] = useState('');
@@ -17,7 +19,24 @@ export default function SignUp({ navigation }) {
   const [hasLowercase, setHasLowercase] = useState(false);
   const [hasNumber, setHasNumber] = useState(false);
   const [passwordInputFocused, setPasswordInputFocused] = useState(false);
+  const [passwordsMatchMessage, setPasswordsMatchMessage] = useState('');
+  const [passwordsMatchColor, setPasswordsMatchColor] = useState('gray');
+  const { showModal } = useModal();
+  const toast = useToast();
 
+  const handleConfirmPasswordChange = (text) => {
+  setConfirmPassword(text);
+  if (text === password && text !== '') {
+    setPasswordsMatchMessage('Las contraseñas coinciden.');
+    setPasswordsMatchColor('green');
+  } else if (text !== '' && text.length > 0) {
+    setPasswordsMatchMessage('Las contraseñas no coinciden.');
+    setPasswordsMatchColor('red');
+  } else {
+    setPasswordsMatchMessage('');
+    setPasswordsMatchColor('gray');
+  }
+};
 const handlePasswordChange = (text) => {
   setPassword(text);
   setHasMinLength(text.length >= 6);
@@ -27,28 +46,29 @@ const handlePasswordChange = (text) => {
 };
   const handleSignUp = async () => {
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      Alert.alert("Error", "Todos los campos son obligatorios.");
+      await showModal({ type: 'error', title: 'Error', message: 'Todos los campos son obligatorios.' });
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Las contraseñas no coinciden.");
+      await showModal({ type: 'error', title: 'Error', message: 'Las contraseñas no coinciden.' });
       return;
     }
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,}$/;
     if (!passwordRegex.test(password)) {
-      Alert.alert(
-        "Error",
-        "La contraseña debe tener al menos 6 caracteres, incluyendo una letra mayúscula, una minúscula y un número."
-      );
+      await showModal({
+        type: 'error',
+        title: 'Error',
+        message: 'La contraseña debe tener al menos 6 caracteres, incluyendo una letra mayúscula, una minúscula y un número.',
+      });
       return;
     }
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      Alert.alert("Registro exitoso", "Usuario registrado con éxito.");
-      navigation.reset({ index: 0, routes: [{ name: 'Login' }] }); 
+      await showModal({ type: 'success', title: 'Registro exitoso', message: 'Usuario registrado con éxito.' });
+      navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
     } catch (error) {
       let errorMessage = "Hubo un problema al registrar el usuario.";
       switch (error.code) {
@@ -65,17 +85,26 @@ const handlePasswordChange = (text) => {
           errorMessage = "Error de conexión, por favor intenta más tarde.";
           break;
       }
-      Alert.alert("Error", errorMessage);
+      toast.show({ type: 'error', text: errorMessage });
     }
   };
 
   return (
-      <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 20}
+    // 1. ELIMINA KeyboardAvoidingView, ya no es necesario.
+    // 2. Haz que el KeyboardAwareScrollView sea el contenedor principal con flex: 1.
+    <KeyboardAwareScrollView
+      style={styles.container} // Asegúrate que styles.container tenga { flex: 1 }
+      contentContainerStyle={styles.scrollContent}
+      
+      // *** AJUSTA ESTOS VALORES PARA UN MEJOR DESPLAZAMIENTO ***
+      extraScrollHeight={Platform.OS === 'ios' ? 200 : 180} // Ajuste fino para el salto (menos es más)
+      enableOnAndroid={true} // Siempre déjalo en true
+      enableAutomaticScroll={true} // Permite el scroll automático al enfocar
+      
+      // Asegúrate de que el logo/título no se muevan de forma extraña al cargar
+      keyboardOpeningTime={0} 
     >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+
         <Image source={require('../assets/logoTinta.png')} style={styles.logo} />
         <Text style={styles.title}>Regístrate</Text>
 
@@ -132,18 +161,18 @@ const handlePasswordChange = (text) => {
       </View>
       {passwordInputFocused && (
         <View style={styles.passwordChecklistContainer}>
-          <Text style={styles.passwordChecklistTitle}>La contraseña debe tener:</Text>
+          <Text style={styles.passwordChecklistTitle}>La contraseña debe estar compuesta por:</Text>
           <Text style={[styles.passwordChecklistItem, { color: hasMinLength ? 'green' : 'red' }]}>
             <FontAwesome name={hasMinLength ? "check-circle" : "times-circle"} size={14} /> +6 caracteres
           </Text>
           <Text style={[styles.passwordChecklistItem, { color: hasUppercase ? 'green' : 'red' }]}>
-            <FontAwesome name={hasUppercase ? "check-circle" : "times-circle"} size={14} /> Mayúscula
+            <FontAwesome name={hasUppercase ? "check-circle" : "times-circle"} size={14} /> 1 Mayúscula
           </Text>
           <Text style={[styles.passwordChecklistItem, { color: hasLowercase ? 'green' : 'red' }]}>
-            <FontAwesome name={hasLowercase ? "check-circle" : "times-circle"} size={14} /> Minúscula
+            <FontAwesome name={hasLowercase ? "check-circle" : "times-circle"} size={14} /> 1 Minúscula
           </Text>
           <Text style={[styles.passwordChecklistItem, { color: hasNumber ? 'green' : 'red' }]}>
-            <FontAwesome name={hasNumber ? "check-circle" : "times-circle"} size={14} /> Número
+            <FontAwesome name={hasNumber ? "check-circle" : "times-circle"} size={14} /> 1 Número
           </Text>
         </View>
       )}
@@ -155,14 +184,17 @@ const handlePasswordChange = (text) => {
           style={styles.input}
           placeholder="Confirme su contraseña"
           value={confirmPassword}
-          onChangeText={setConfirmPassword}
+          
+          onChangeText={handleConfirmPasswordChange}
           secureTextEntry={!showConfirmPassword}
+
         />
         <TouchableOpacity onPress={() => setShowConfirmPassword(!showConfirmPassword)}>
           <FontAwesome name={showConfirmPassword ? "eye-slash" : "eye"} style={styles.iconeye} size={20} color="#000000ff" />
         </TouchableOpacity>
       </View>
-
+        <Text style={[styles.passwordMatchMessage, { color: passwordsMatchColor }]}>{passwordsMatchMessage}</Text>
+      
       <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
@@ -170,8 +202,7 @@ const handlePasswordChange = (text) => {
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.signUpText}>¿Ya tienes cuenta? Inicia sesión</Text>
       </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
   );
 }
 
@@ -179,6 +210,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    marginTop: Platform.OS === 'ios' ? 0 : -20,
   },
     scrollContent: {
     flexGrow: 1,
@@ -190,7 +222,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 256,
     height: 256,
-    marginBottom: 10,
+    marginBottom: 0,
   },
   title: {
     fontSize: 36,
@@ -228,6 +260,13 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginBottom: 0,
   },
+  passwordMatchMessage: {
+    alignSelf: 'flex-start',
+    fontSize: 12,
+    marginTop: -5,
+    marginBottom: 10,
+    marginLeft: 5,
+  },
 
   icon: {
     marginRight: 10,
@@ -256,5 +295,6 @@ const styles = StyleSheet.create({
   signUpText: {
     marginTop: 20,
     color: '#007AFF',
+    marginBottom: 60,
   },
 });

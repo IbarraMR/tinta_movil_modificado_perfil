@@ -1,24 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image , KeyboardAvoidingView,Platform,ScrollView} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../src/config/firebaseConfig';
+import { useModal, useToast } from '../componentes/Alert';
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const { showModal } = useModal();
+  const { show: showToast } = useToast();
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert("Error", "Por favor ingrese ambos campos.");
+      await showModal({
+        type: "error",
+        title: "Error",
+        message: "Por favor ingrese ambos campos.",
+        confirmText: "Cerrar"
+      });
+      showToast({ type: "error", text: "Campos incompletos" });
       return;
     }
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      Alert.alert("Login exitoso", "Has iniciado sesión correctamente.");
-      navigation.reset({ index: 0, routes: [{ name: 'Home' }] }); 
+      await showModal({
+        type: "success",
+        title: "Login exitoso",
+        message: "Has iniciado sesión correctamente.",
+        confirmText: "OK"
+      });
+      showToast({ type: "success", text: "Bienvenido" });
+      navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
       let errorMessage = "Hubo un problema al iniciar sesión.";
       switch (error.code) {
@@ -35,7 +50,13 @@ export default function Login({ navigation }) {
           errorMessage = "Error de conexión, por favor intenta más tarde.";
           break;
       }
-      Alert.alert("Error", errorMessage);
+      await showModal({
+        type: "error",
+        title: "Error",
+        message: errorMessage,
+        confirmText: "Cerrar"
+      });
+      showToast({ type: "error", text: "Error en login" });
     }
   };
 
