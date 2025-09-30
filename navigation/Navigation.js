@@ -27,8 +27,15 @@ function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={isAuthenticated ? "Home" : "Login"}>
-        <Stack.Screen name="Login" component={Login} options={{title:'', headerLeft: () => null,}}/>
-        <Stack.Screen name="SignUp" component={SignUp} options={{title:'',}}/>
+        <Stack.Screen name="Login" component={Login} options={{title:'', headerLeft: () => null,headerShadowVisible: false,
+            headerStyle: { 
+              backgroundColor: 'white', 
+              elevation: 0,
+            },}}/>
+        <Stack.Screen name="SignUp" component={SignUp} options={{title:'',headerShadowVisible: false,
+            headerStyle: { 
+              backgroundColor: 'white', 
+              elevation: 0},}}/>
         <Stack.Screen name="Home" component={Home} options={{title:'Inicio',}}/>
       </Stack.Navigator>
     </NavigationContainer>

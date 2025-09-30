@@ -171,7 +171,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   signUpText: {
-    marginTop: 280,
+    marginTop: 80,
+    marginBottom: 140,
     color: '#007AFF',
   },
 });
