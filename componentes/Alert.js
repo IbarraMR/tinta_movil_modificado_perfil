@@ -16,7 +16,6 @@ import {
     const containerStyle = {
         width: size,
         height: size,
-        borderRadius: size / 2,
         alignItems: 'center',
         justifyContent: 'center',
     };
@@ -81,11 +80,15 @@ import {
         <Modal visible={visible} transparent animationType="none" statusBarTranslucent>
         <View style={styles.modalBackdrop}>
             <Animated.View style={[styles.modalBox, { transform: [{ scale }], opacity }]}>
-            <View style={styles.iconWrap}>
-                <IconBW type={type} size={32} />
-            </View>
+            
+            {/* Ícono + título en la misma fila */}
+            {!!title && (
+                <View style={styles.headerRow}>
+                <IconBW type={type} size={22} />
+                <Text style={styles.modalTitle}>{title}</Text>
+                </View>
+            )}
 
-            {!!title && <Text style={styles.modalTitle}>{title}</Text>}
             {!!message && <Text style={styles.modalMessage}>{message}</Text>}
 
             <View style={styles.buttonsRow}>
@@ -241,7 +244,7 @@ import {
         padding: 20,
     },
     modalBox: {
-        width: Math.min(320, SCREEN_W - 40), // más angosto
+        width: Math.min(320, SCREEN_W - 40),
         backgroundColor: '#fff',
         borderRadius: 12,
         paddingVertical: 20,
@@ -252,22 +255,17 @@ import {
         shadowRadius: 10,
         elevation: 6,
     },
-    iconWrap: {
-        width: 48,
-        height: 48,
-        borderRadius: 24,
-        backgroundColor: '#fff',
-        borderWidth: 1,
-        borderColor: '#000',
-        justifyContent: 'center',
+    headerRow: {
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         marginBottom: 12,
     },
     modalTitle: {
         fontSize: 18,
         fontWeight: '700',
         color: '#000',
-        marginBottom: 6,
+        marginLeft: 8,
         textAlign: 'center',
     },
     modalMessage: {
@@ -278,7 +276,7 @@ import {
     },
     buttonsRow: {
         flexDirection: 'row',
-        justifyContent: 'center', // centrado
+        justifyContent: 'center',
         alignItems: 'center',
         width: '100%',
     },
