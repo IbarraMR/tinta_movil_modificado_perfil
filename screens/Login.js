@@ -35,7 +35,7 @@ export default function Login({ navigation }) {
       showToast({ type: "success", text: "Bienvenido" });
       navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
-      let errorMessage = "Hubo un problema al iniciar sesión.";
+      let errorMessage = "Las credenciales no son válidas.";
     switch (error.code) {
         case 'auth/invalid-email':
             errorMessage = "El formato del correo electrónico no es válido.";
@@ -49,10 +49,6 @@ export default function Login({ navigation }) {
         case 'auth/network-request-failed':
             errorMessage = "Error de conexión, por favor intenta más tarde.";
             break;
-        default:
-            // Muestra el código de error real para depuración, si existe
-            errorMessage = `Error de autenticación: ${error.code || 'Desconocido'}. Por favor, intente de nuevo.`;
-            break; 
     }
       await showModal({
         type: "error",
