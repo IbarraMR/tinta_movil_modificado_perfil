@@ -309,7 +309,7 @@ import {
     },
     toastWrap: {
         position: 'absolute',
-        bottom: 28,
+        top: 50,
         left: 20,
         right: 20,
         alignItems: 'center',

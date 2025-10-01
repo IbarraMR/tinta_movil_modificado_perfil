@@ -17,7 +17,7 @@ export default function Login({ navigation }) {
       await showModal({
         type: "error",
         title: "Error",
-        message: "Por favor ingrese ambos campos.",
+        message: "Por favor completar los campos.",
         confirmText: "Cerrar"
       });
       showToast({ type: "error", text: "Campos incompletos" });
@@ -36,27 +36,31 @@ export default function Login({ navigation }) {
       navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
     } catch (error) {
       let errorMessage = "Hubo un problema al iniciar sesión.";
-      switch (error.code) {
+    switch (error.code) {
         case 'auth/invalid-email':
-          errorMessage = "El formato del correo electrónico no es válido.";
-          break;
+            errorMessage = "El formato del correo electrónico no es válido.";
+            break;
         case 'auth/wrong-password':
-          errorMessage = "La contraseña es incorrecta.";
-          break;
+            errorMessage = "La contraseña es incorrecta.";
+            break;
         case 'auth/user-not-found':
-          errorMessage = "No se encontró un usuario con este correo.";
-          break;
+            errorMessage = "No se encontró un usuario con este correo.";
+            break;
         case 'auth/network-request-failed':
-          errorMessage = "Error de conexión, por favor intenta más tarde.";
-          break;
-      }
+            errorMessage = "Error de conexión, por favor intenta más tarde.";
+            break;
+        default:
+            // Muestra el código de error real para depuración, si existe
+            errorMessage = `Error de autenticación: ${error.code || 'Desconocido'}. Por favor, intente de nuevo.`;
+            break; 
+    }
       await showModal({
         type: "error",
         title: "Error",
         message: errorMessage,
         confirmText: "Cerrar"
       });
-      showToast({ type: "error", text: "Error en login" });
+      showToast({ type: "error", text: "Error al iniciar sesión " });
     }
   };
 
@@ -103,7 +107,7 @@ export default function Login({ navigation }) {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-        <Text style={styles.signUpText}>¿No tienes cuenta aún? Regístrate</Text>
+        <Text style={styles.signUpText}>¿No tenes cuenta aún? <Text style={styles.registrate}> Regístrate</Text></Text>
       </TouchableOpacity>
 
     </KeyboardAvoidingView>
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 80,
+    padding: 60,
     backgroundColor: '#fff',
     paddingTop:0,
   },
@@ -174,5 +178,9 @@ const styles = StyleSheet.create({
     marginTop: 80,
     marginBottom: 140,
     color: '#007AFF',
+  },
+  registrate: {
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });

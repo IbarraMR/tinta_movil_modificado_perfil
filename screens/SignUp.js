@@ -24,6 +24,14 @@ export default function SignUp({ navigation }) {
   const { showModal } = useModal();
   const toast = useToast();
 
+  const handleNameChange = (input) => {
+    const filteredInput = input.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, ''); //
+    setFirstName(filteredInput);
+  };
+  const handleApellidoChange = (input) => {
+    const filteredInput = input.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+    setLastName(filteredInput);
+  };
   const handleConfirmPasswordChange = (text) => {
   setConfirmPassword(text);
   if (text === password && text !== '') {
@@ -110,7 +118,7 @@ const handlePasswordChange = (text) => {
           style={styles.input}
           placeholder="Ingrese su nombre"
           value={firstName}
-          onChangeText={setFirstName}
+          onChangeText={handleNameChange}
         />
       </View>
 
@@ -121,7 +129,7 @@ const handlePasswordChange = (text) => {
           style={styles.input}
           placeholder="Ingrese su apellido"
           value={lastName}
-          onChangeText={setLastName}
+          onChangeText={handleApellidoChange}
         />
       </View>
 
@@ -195,7 +203,7 @@ const handlePasswordChange = (text) => {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.signUpText}>¿Ya tienes cuenta? Inicia sesión</Text>
+        <Text style={styles.signUpText}>¿Ya tenes cuenta? <Text style={styles.iniciarS}>Inicia sesión</Text></Text>
       </TouchableOpacity>
       </KeyboardAwareScrollView>
   );
@@ -211,7 +219,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 80,
+    padding: 60,
     paddingTop: 0,
   },
   logo: {
@@ -291,5 +299,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     color: '#007AFF',
     marginBottom: 60,
+  },
+  iniciarS:{
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
 });
