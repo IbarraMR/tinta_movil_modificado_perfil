@@ -5,7 +5,7 @@ import { auth } from '../src/config/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useModal, useToast } from '../componentes/Alert';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
+//Ultima version estable
 export default function SignUp({ navigation }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
