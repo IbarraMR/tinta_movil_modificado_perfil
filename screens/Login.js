@@ -11,15 +11,10 @@ export default function Login({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const { showModal } = useModal();
   const { show: showToast } = useToast();
-
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [isBlocked, setIsBlocked] = useState(false);
   const handleLogin = async () => {
     if (!email || !password) {
-      await showModal({
-        type: "error",
-        title: "Error",
-        message: "Por favor completar los campos.",
-        confirmText: "Cerrar"
-      });
       showToast({ type: "error", text: "Campos incompletos" });
       return;
     }
@@ -34,6 +29,7 @@ export default function Login({ navigation }) {
       });
       showToast({ type: "success", text: "Bienvenido" });
       navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+      setLoginAttempts(0);
     } catch (error) {
       let errorMessage = "Las credenciales no son válidas.";
     switch (error.code) {
@@ -50,13 +46,33 @@ export default function Login({ navigation }) {
             errorMessage = "Error de conexión, por favor intenta más tarde.";
             break;
     }
-      await showModal({
-        type: "error",
-        title: "Error",
-        message: errorMessage,
-        confirmText: "Cerrar"
-      });
-      showToast({ type: "error", text: "Error al iniciar sesión " });
+
+      const newAttempts = loginAttempts + 1;
+      setLoginAttempts(newAttempts);
+
+      if (newAttempts >= 3) {
+        setIsBlocked(true);
+        await showModal({
+          type: "error",
+          title: "Demasiados intentos",
+          message: "Has excedido el número de intentos.",
+          confirmText: "Cerrar"
+        });
+        showToast({ type: "error", text: "Intenta de nuevo en 15 segundos." });
+
+        setTimeout(() => {
+          setLoginAttempts(0);
+          setIsBlocked(false);
+        }, 15000);
+      } else {
+        await showModal({
+          type: "error",
+          title: "Error",
+          message: errorMessage ,
+          confirmText: "Cerrar"
+        });
+        showToast({ type: "error", text: `Intento ${newAttempts} de 3` });
+      }
     }
   };
 
@@ -98,12 +114,18 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Ingresar</Text>
+      <TouchableOpacity
+        style={[styles.button, isBlocked && { backgroundColor: 'gray' }]}
+        onPress={handleLogin}
+        disabled={isBlocked}
+      >
+        <Text style={styles.buttonText}>
+          {isBlocked ? "Bloqueado (15s)" : "Ingresar"}
+        </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-        <Text style={styles.signUpText}>¿No tenes cuenta aún? <Text style={styles.registrate}> Regístrate</Text></Text>
+        <Text style={styles.signUpText}>¿No tenés cuenta aún? <Text style={styles.registrate}> Regístrate</Text></Text>
       </TouchableOpacity>
 
     </KeyboardAvoidingView>
@@ -177,6 +199,5 @@ const styles = StyleSheet.create({
   },
   registrate: {
     fontWeight: 'bold',
-    textDecorationLine: 'underline',
   },
 });

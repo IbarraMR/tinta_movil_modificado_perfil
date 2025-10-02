@@ -54,7 +54,7 @@ const handlePasswordChange = (text) => {
 };
   const handleSignUp = async () => {
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
-      await showModal({ type: 'error', title: 'Error', message: 'Todos los campos son obligatorios.' });
+      toast.show({ type: "error", text: "Todos los campos son obligatorios" });
       return;
     }
 
@@ -203,7 +203,7 @@ const handlePasswordChange = (text) => {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.signUpText}>¿Ya tenes cuenta? <Text style={styles.iniciarS}>Inicia sesión</Text></Text>
+        <Text style={styles.signUpText}>¿Ya tenés cuenta? <Text style={styles.iniciarS}>Inicia sesión</Text></Text>
       </TouchableOpacity>
       </KeyboardAwareScrollView>
   );
@@ -302,6 +302,5 @@ const styles = StyleSheet.create({
   },
   iniciarS:{
     fontWeight: 'bold',
-    textDecorationLine: 'underline',
   },
 });
