@@ -4,10 +4,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Platform } from 'react-native';
 // Importa tus componentes de pantalla
 import Home from '../screens/Home';      // O el nombre de tu componente Home real
-import Clientes from '../screens/Clientes';
 import Configuracion from '../screens/Configuracion';
 
-const bottomPadding = Platform.OS === 'ios' ? 0 : 40;
+const bottomPadding = Platform.OS === 'ios' ? 22 : 40;
 const Tab = createBottomTabNavigator();
 export default function AppTabs() {
     return (
@@ -36,26 +35,14 @@ export default function AppTabs() {
             }}
         />
 
-        {/* Pestaña: CLIENTES */}
-        <Tab.Screen
-            name="ClientesTab"
-            component={Clientes}
-            options={{
-            title: 'Clientes',
-            tabBarIcon: ({ color, size }) => (
-                <FontAwesome name="users" color={color} size={size} />
-            ),
-            }}
-        />
-
         {/* Pestaña: SETTINGS */}
         <Tab.Screen
             name="SettingsTab"
             component={Configuracion}
             options={{
-            title: 'Ajustes',
+            title: 'Perfil',
             tabBarIcon: ({ color, size }) => (
-                <FontAwesome name="cog" color={color} size={size} />
+                <FontAwesome name="user" size={size} color={color} />
             ),
             }}
         />
