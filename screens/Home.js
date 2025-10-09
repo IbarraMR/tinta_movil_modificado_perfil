@@ -1,5 +1,5 @@
 import React ,{useState} from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, Dimensions, Modal, Pressable } from 'react-native'; 
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Dimensions, Modal, Pressable , Image} from 'react-native'; 
 import { signOut } from 'firebase/auth';
 import { auth } from '../src/config/firebaseConfig';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -87,20 +87,47 @@ export default function Home({ navigation }) {
             >
                 <Pressable 
                     style={modalStyles.centeredView} 
-                    onPress={() => setShowAboutModal(false)} // Closes modal when tapping outside
+                    pointerEvents="box-none" 
+                    //onPress={() => setShowAboutModal(false)} // Closes modal when tapping outside
                 >
                     <View style={modalStyles.modalView}>
-                        <Text style={modalStyles.modalTitle}>Sobre Nosotros</Text>
-                        <Text style={modalStyles.modalSubtitle}>Misión</Text>
-                        <Text style={modalStyles.modalText}>
-                            Nuestra misión es proporcionar soluciones de papelería e insumos de impresión de alta calidad, garantizando la satisfacción total del cliente a través de un servicio rápido y personalizado.
-                        </Text>
-                        <Text style={modalStyles.modalSubtitle}>Visión</Text>
-                        <Text style={modalStyles.modalText}>
-                            Ser el proveedor líder en la región, reconocido por la innovación y la sostenibilidad de nuestros productos, y por impulsar el crecimiento de nuestros clientes y colaboradores.
-                        </Text>
+                        <KeyboardAwareScrollView contentContainerStyle={modalStyles.modalScrollViewContent}>
+                            <Text style={modalStyles.modalTitle}>Sobre Nosotros</Text>
+
+                            {/* --- SECCIÓN MISIÓN --- */}
+                            <Text style={modalStyles.mainSectionTitle}>Nuestra Misión</Text>
+                            <View style={modalStyles.card}>
+                              {/* NOTA: Asegúrate de que la ruta de la imagen sea correcta */}
+                              <Image
+                                source={require('../assets/mision.jpeg')} 
+                                style={modalStyles.cardImage}
+                              />
+                              <Text style={modalStyles.cardText}>
+                                Ofrecer productos personalizados con calidad, rapidez y compromiso, ayudando a nuestros clientes a dar vida a sus ideas.
+                              </Text>
+                            </View>
+        
+                            {/* --- SECCIÓN VISIÓN --- */}
+                            <Text style={modalStyles.mainSectionTitle}>Nuestra Visión</Text>
+                            <View style={modalStyles.card}>
+                              {/* NOTA: Asegúrate de que la ruta de la imagen sea correcta */}
+                              <Image
+                                source={require('../assets/vision.jpeg')} 
+                                style={modalStyles.cardImage}
+                              />
+                              <Text style={modalStyles.cardText}>
+                                Ser una imprenta referente en Salta por la calidad y creatividad, creciendo junto a la confianza de nuestros clientes.
+                              </Text>
+                            </View>
+                            
+                            {/* Espacio para que el contenido no quede pegado al borde */}
+                            <View style={{ height: 30 }} /> 
+
+                        </KeyboardAwareScrollView>
+                        
+                        {/* Botón Cerrar (Sticky al final) */}
                         <TouchableOpacity
-                            style={[neumorphismStyles.aboutButton, { marginTop: 30, width: '80%' }]}
+                            style={[neumorphismStyles.aboutButton, modalStyles.closeButton]}
                             onPress={() => setShowAboutModal(false)}
                         >
                             <Text style={neumorphismStyles.aboutButtonText}>Cerrar</Text>
@@ -120,7 +147,7 @@ export default function Home({ navigation }) {
                         chartConfig={chartConfig}
                         accessor={"population"}
                         backgroundColor={"transparent"}
-                        center={[screenWidth / 12, 0]}
+                        center={[screenWidth / 20, 0]}
                         absolute
                     />
                 </View>
@@ -131,7 +158,7 @@ export default function Home({ navigation }) {
                     <MetaCard 
                         title="Insumos" 
                         icon="📦" 
-                        onPress={() => handleCardPress('InsumosScreen')} // <-- NAVIGATION
+                        onPress={() => handleCardPress('Insumos')} // <-- NAVIGATION
                     />
                     <MetaCard 
                         title="Productos" 
@@ -151,18 +178,34 @@ export default function Home({ navigation }) {
                 </View>
 
                 {/* "SOBRE NOSOTROS" BUTTON */}
-                <Text style={[styles.title, { marginTop: 30 }]}>Información</Text>
-                <TouchableOpacity 
-                    style={neumorphismStyles.aboutButton} 
-                    onPress={() => setShowAboutModal(true)} // <-- SHOW MODAL
-                > 
-                    <Text style={neumorphismStyles.aboutButtonText}>Sobre Nosotros</Text>
-                </TouchableOpacity>
+                <Text style={styles.title}>Sobre Nosotros</Text>
 
-                {/* Optional Sign Out Button */}
-                {/* <TouchableOpacity onPress={handleSignOut} style={styles.button}>
-                    <Text style={styles.buttonText}>Cerrar Sesión</Text>
-                </TouchableOpacity> */}
+                            {/* --- SECCIÓN MISIÓN --- */}
+                            <Text style={styles.subtitle}>Nuestra Misión</Text>
+                            <View style={modalStyles.card}>
+                              {/* NOTA: Asegúrate de que la ruta de la imagen sea correcta */}
+                              <Image
+                                source={require('../assets/mision.jpeg')} 
+                                style={modalStyles.cardImage}
+                              />
+                              <Text style={modalStyles.cardText}>
+                                Ofrecer productos personalizados con calidad, rapidez y compromiso, ayudando a nuestros clientes a dar vida a sus ideas.
+                              </Text>
+                            </View>
+        
+                            {/* --- SECCIÓN VISIÓN --- */}
+                            <Text style={styles.subtitle}>Nuestra Visión</Text>
+                            <View style={modalStyles.card}>
+                              {/* NOTA: Asegúrate de que la ruta de la imagen sea correcta */}
+                              <Image
+                                source={require('../assets/vision.jpeg')} 
+                                style={modalStyles.cardImage}
+                              />
+                              <Text style={modalStyles.cardText}>
+                                Ser una imprenta referente en Salta por la calidad y creatividad, creciendo junto a la confianza de nuestros clientes.
+                              </Text>
+                            </View>
+
             </KeyboardAwareScrollView>
         </View>
     );
@@ -246,19 +289,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: NEU_COLOR, // Asegúrate de que el fondo del contenedor principal coincida con NEU_COLOR
+    padding: 0,
   },
   scrollContainer: { 
-    padding: 20,
-    alignItems: 'center', 
+    padding: 0,
+    alignItems: 'center',
+    paddingBottom: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    marginTop: 20,
+    marginTop: 0,
     textAlign: 'center',
     color: '#333',
   },
+  subtitle: {
+    fontSize: 22,
+    fontWeight: '600',
+    marginBottom: 15,
+    marginTop: 20,
+    textAlign: 'center',
+    color: '#6e6e6eff',
+  },
+
   button: {
     backgroundColor: '#922b21',
     paddingVertical: 10,
@@ -277,42 +331,70 @@ const styles = StyleSheet.create({
 const modalStyles = StyleSheet.create({
     centeredView: {
         flex: 1,
-        justifyContent: 'flex-end', // Aligns the content to the bottom
+        justifyContent: 'flex-end',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dim background
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Fondo más oscuro para enfoque
     },
     modalView: {
         width: '100%',
-        height: '93%', // Occupies 80% of the screen height
+        height: '92%', 
         backgroundColor: NEU_COLOR,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: 35,
         alignItems: 'center',
-        // Neumorphism style for the modal itself
-        shadowColor: "#000000b6",
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
+        paddingHorizontal: 20,
+    },
+    modalScrollViewContent: {
+        paddingTop: 20,
+        paddingBottom: 90,
+        alignItems: 'center',
     },
     modalTitle: {
-        fontSize: 28,
+        fontSize: 30,
         fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#000000ff',
+    },
+    // --- Nuevos Estilos para Misión/Visión ---
+    mainSectionTitle: {
+        fontSize: 22,
+        fontWeight: '700',
+        color: '#000000ff',
+        marginTop: 20,
         marginBottom: 20,
-        color: '#333',
+        alignSelf: 'flex-start', // Alinea el título a la izquierda
+        width: '100%',
     },
-    modalSubtitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: '#555',
-        marginTop: 15,
-        marginBottom: 8,
+    card: {
+        width: '90%',
+        backgroundColor: NEU_COLOR,
+        borderRadius: 15,
+        overflow: 'hidden', // Para que la imagen se recorte al radio
+        marginBottom: 0,
+        // Estilo de elevación suave (Neumorfismo)
+        shadowColor: SHADOW_DARK,
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 4,
     },
-    modalText: {
-        textAlign: 'center',
+    cardImage: {
+        width: '100%',
+        height: 150, // Altura fija para las imágenes
+        resizeMode: 'cover',
+    },
+    cardText: {
+        padding: 15,
         fontSize: 16,
-        color: '#666',
-        lineHeight: 24,
+        color: '#333',
+        lineHeight: 22,
+        textAlign: 'justify',
+    },
+    // --- Estilo del botón de cierre (Fijo en la parte inferior) ---
+    closeButton: {
+        position: 'absolute',
+        bottom: 30,
+        width: '93%',
+        zIndex: 10, // Asegura que esté por encima del contenido
     },
 });

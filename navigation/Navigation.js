@@ -7,6 +7,7 @@ import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
 import Home from '../screens/Home';
 import AppTabs from './AppTabs';
+import Insumos from '../screens/Insumos';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,7 @@ function Navigation() {
               backgroundColor: 'white', 
               elevation: 0},}}/>
         <Stack.Screen name="Home" component={AppTabs} options={{title:'Inicio', headerShown:false}}/>
+        <Stack.Screen name="Insumos" component={Insumos} options={{title:'Insumos'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

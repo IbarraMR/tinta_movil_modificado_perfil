@@ -21,12 +21,6 @@ export default function Login({ navigation }) {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      await showModal({
-        type: "success",
-        title: "Login exitoso",
-        message: "Has iniciado sesión correctamente.",
-        confirmText: "OK"
-      });
       showToast({ type: "success", text: "Bienvenido" });
       navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
       setLoginAttempts(0);
@@ -140,11 +134,13 @@ const styles = StyleSheet.create({
     padding: 60,
     backgroundColor: '#fff',
     paddingTop:0,
+
   },
   logo: {
     width: 257,
     height: 257,
     marginBottom: 20,
+    zIndex: 1,
   },
   title: {
     fontSize: 36,
