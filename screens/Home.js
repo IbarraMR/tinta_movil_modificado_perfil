@@ -11,18 +11,17 @@ const screenWidth = Dimensions.get("window").width;
 // Chart configuration object
 const chartConfig = {
   backgroundGradientFrom: "#1E2923",
-  backgroundGradientFromOpacity: 0,
+  backgroundGradientFromOpacity: 2,
   backgroundGradientTo: "#08130D",
   backgroundGradientToOpacity: 0.5,
   color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
   strokeWidth: 2, // optional, default 3
   barPercentage: 0.5,
-  useShadowColorFromDataset: false // optional
 };
-const MetaCard = ({ title, icon, onPress }) => {
+const MetaCard = ({ title, img, onPress }) => {
   return (
     <TouchableOpacity style={neumorphismStyles.cardContainer} onPress={onPress}>
-      <Text style={neumorphismStyles.cardTitle}>{icon}</Text>
+      <Image source={img} style={neumorphismStyles.cardImage}/>
       <Text style={neumorphismStyles.cardSubtitle}>{title}</Text>
     </TouchableOpacity>
   );
@@ -140,16 +139,42 @@ export default function Home({ navigation }) {
             <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer} style={styles.container}>
                 <View>
                     <Text style={styles.title}>Insumos mas utilizados</Text>
-                    <PieChart
+                    <View style={{
+                      borderWidth: 2,
+                      borderColor: '#333',
+                      borderRadius: 16, // Ajusta según el tamaño del gráfico
+                      padding: 0,
+                      alignSelf: 'center',
+                      justifyContent: 'center',
+                              width: screenWidth - 40,
+                              paddingRight:12,
+                              height:220,
+                              backgroundColor: NEU_COLOR,
+                              borderRadius: 15,
+                              marginTop: 10,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              shadowColor: SHADOW_DARK, // Sombra inferior/derecha (oscura)
+                              shadowOffset: { width: 4, height: 4 },
+                              shadowOpacity: 1,
+                              shadowRadius: 5,
+                              
+                              elevation: 16, 
+                              borderColor: SHADOW_LIGHT, 
+                              borderWidth: 1,
+
+                    }}>
+                      <PieChart
                         data={data}
-                        width={screenWidth}
+                        width={screenWidth - 16}
                         height={180}
                         chartConfig={chartConfig}
                         accessor={"population"}
                         backgroundColor={"transparent"}
                         center={[screenWidth / 20, 0]}
                         absolute
-                    />
+                      />
+                    </View>
                 </View>
 
                 {/* CARDS */}
@@ -157,22 +182,22 @@ export default function Home({ navigation }) {
                 <View style={neumorphismStyles.cardsWrapper}>
                     <MetaCard 
                         title="Insumos" 
-                        icon="📦" 
+                        img={require('../assets/Insumos.png')}
                         onPress={() => handleCardPress('Insumos')} // <-- NAVIGATION
                     />
                     <MetaCard 
                         title="Productos" 
-                        icon="🏷️" 
+                        img={require('../assets/producto.webp')}
                         onPress={() => handleCardPress('ProductosScreen')} // <-- NAVIGATION
                     />
                     <MetaCard 
                         title="Proveedores" 
-                        icon="🚚" 
+                        img={require('../assets/proveedor.avif')}
                         onPress={() => handleCardPress('ProveedoresScreen')} // <-- NAVIGATION
                     />
                     <MetaCard 
-                        title="Ventas" 
-                        icon="💸" 
+                        title="Pedidos" 
+                        img={require('../assets/pedido.avif')}
                         onPress={() => handleCardPress('VentasScreen')} // <-- NAVIGATION
                     />
                 </View>
@@ -226,7 +251,7 @@ const neumorphismStyles = StyleSheet.create({
     // --- ESTILO BASE DE LA TARJETA (ELEVADA) ---
     cardContainer: {
         width: (screenWidth - 60) / 2, // 2 tarjetas por fila con espacio entre ellas
-        height: 150,
+        height:170,
         backgroundColor: NEU_COLOR,
         borderRadius: 15,
         justifyContent: 'center',
@@ -250,12 +275,21 @@ const neumorphismStyles = StyleSheet.create({
     },
     cardTitle: {
         fontSize: 30,
+        padding: 10,
         marginBottom: 5,
     },
     cardSubtitle: {
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: '600',
-        color: '#555',
+        color: '#000000ff',
+        paddingBottom: 15,
+    },
+    cardImage : {
+        width: '100%',
+        height: 136,
+        borderRadius: 15,
+        marginBottom: 10,
+        resizeMode: 'cover',
     },
 
     // --- ESTILO PARA BOTÓN "SOBRE NOSOTROS" (ELEVADO) ---
@@ -385,7 +419,7 @@ const modalStyles = StyleSheet.create({
     },
     cardText: {
         padding: 15,
-        fontSize: 16,
+        fontSize: 14,
         color: '#333',
         lineHeight: 22,
         textAlign: 'justify',

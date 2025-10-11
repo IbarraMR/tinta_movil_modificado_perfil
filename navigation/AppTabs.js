@@ -1,4 +1,5 @@
 import React from 'react';
+import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons';
 import { Platform, TouchableOpacity} from 'react-native'; // <-- Aseguramos la importación de Alert
@@ -44,7 +45,13 @@ export default function AppTabs() {
                     paddingBottom: bottomPadding, 
                     paddingTop: 5, 
                 },
-                headerTitle: '',
+                headerTitle: () => (
+                    <Image
+                        // REEMPLAZA esta ruta con la ubicación real de tu archivo de logo (e.g., logo.png)
+                        source={require('../assets/logoTinta.png')} 
+                        style={{ width: 200, height: 80, resizeMode: 'contain' }}
+                    />
+                ),
                 headerTitleAlign: 'center',
                 headerShadowVisible: false,
                 headerStyle: { 
