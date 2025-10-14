@@ -8,6 +8,8 @@ import SignUp from '../screens/SignUp';
 import Home from '../screens/Home';
 import AppTabs from './AppTabs';
 import Insumos from '../screens/Insumos';
+import Perfil from '../screens/Perfil';
+import EditarPerfil from '../screens/EditarPerfil';
 
 const Stack = createStackNavigator();
 
@@ -29,21 +31,54 @@ function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={isAuthenticated ? "Home" : "Login"}>
-        <Stack.Screen name="Login" component={Login} options={{title:'', headerLeft: () => null,headerShadowVisible: false,
+        <Stack.Screen 
+          name="Login" 
+          component={Login} 
+          options={{
+            title:'',
+            headerLeft: () => null,
+            headerShadowVisible: false,
             headerStyle: { 
               backgroundColor: 'white', 
               elevation: 0,
-            },}}/>
-        <Stack.Screen name="SignUp" component={SignUp} options={{title:'',headerShadowVisible: false,
+            },
+          }}
+        />
+        <Stack.Screen 
+          name="SignUp" 
+          component={SignUp} 
+          options={{
+            title:'',
+            headerShadowVisible: false,
             headerStyle: { 
               backgroundColor: 'white', 
-              elevation: 0},}}/>
-        <Stack.Screen name="Home" component={AppTabs} options={{title:'Inicio', headerShown:false}}/>
-        <Stack.Screen name="Insumos" component={Insumos} options={{title:'Insumos'}}/>
+              elevation: 0,
+            },
+          }}
+        />
+        <Stack.Screen 
+          name="Home" 
+          component={AppTabs} 
+          options={{title:'Inicio', headerShown:false}}
+        />
+        <Stack.Screen 
+          name="Insumos" 
+          component={Insumos} 
+          options={{title:'Insumos'}}
+        />
+        <Stack.Screen 
+          name="Perfil" 
+          component={Perfil} 
+          options={{title:'Perfil'}}
+        />
+        <Stack.Screen 
+          name="EditarPerfil" 
+          component={EditarPerfil} 
+          options={{ title: 'Editar Perfil' }} 
+/>
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 export default Navigation;
-

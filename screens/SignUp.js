@@ -104,7 +104,7 @@ const handlePasswordChange = (text) => {
       contentContainerStyle={styles.scrollContent}
       extraScrollHeight={Platform.OS === 'ios' ? 200 : 180} 
       enableOnAndroid={true}
-      enableAutomaticScroll={true} // Permite el scroll automático 
+      enableAutomaticScroll={true} 
       keyboardOpeningTime={0} 
     >
 

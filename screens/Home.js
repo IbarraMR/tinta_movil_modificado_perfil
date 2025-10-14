@@ -303,7 +303,7 @@ const neumorphismStyles = StyleSheet.create({
         marginTop: 10,
         height: 60,
         
-        // Mismos estilos de elevación
+
         shadowColor: SHADOW_DARK,
         shadowOffset: { width: 4, height: 4 },
         shadowOpacity: 1,
@@ -319,10 +319,9 @@ const neumorphismStyles = StyleSheet.create({
     },
 });
 const styles = StyleSheet.create({
-  // ... (container, scrollContainer, logo, title, button, buttonText se mantienen iguales)
   container: {
     flex: 1,
-    backgroundColor: NEU_COLOR, // Asegúrate de que el fondo del contenedor principal coincida con NEU_COLOR
+    backgroundColor: NEU_COLOR, 
     padding: 0,
   },
   scrollContainer: { 
@@ -367,7 +366,7 @@ const modalStyles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Fondo más oscuro para enfoque
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
     },
     modalView: {
         width: '100%',
@@ -389,23 +388,21 @@ const modalStyles = StyleSheet.create({
         marginBottom: 10,
         color: '#000000ff',
     },
-    // --- Nuevos Estilos para Misión/Visión ---
     mainSectionTitle: {
         fontSize: 22,
         fontWeight: '700',
         color: '#000000ff',
         marginTop: 20,
         marginBottom: 20,
-        alignSelf: 'flex-start', // Alinea el título a la izquierda
+        alignSelf: 'flex-start',
         width: '100%',
     },
     card: {
         width: '90%',
         backgroundColor: NEU_COLOR,
         borderRadius: 15,
-        overflow: 'hidden', // Para que la imagen se recorte al radio
+        overflow: 'hidden',
         marginBottom: 0,
-        // Estilo de elevación suave (Neumorfismo)
         shadowColor: SHADOW_DARK,
         shadowOffset: { width: 2, height: 2 },
         shadowOpacity: 0.5,
@@ -414,7 +411,7 @@ const modalStyles = StyleSheet.create({
     },
     cardImage: {
         width: '100%',
-        height: 150, // Altura fija para las imágenes
+        height: 150,
         resizeMode: 'cover',
     },
     cardText: {
@@ -424,11 +421,10 @@ const modalStyles = StyleSheet.create({
         lineHeight: 22,
         textAlign: 'justify',
     },
-    // --- Estilo del botón de cierre (Fijo en la parte inferior) ---
     closeButton: {
         position: 'absolute',
         bottom: 30,
         width: '93%',
-        zIndex: 10, // Asegura que esté por encima del contenido
+        zIndex: 10, 
     },
 });

@@ -1,104 +1,102 @@
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, TouchableOpacity, Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons';
-import { Platform, TouchableOpacity} from 'react-native'; // <-- Aseguramos la importación de Alert
-import { signOut } from 'firebase/auth'; // Importamos signOut
-import { auth } from '../src/config/firebaseConfig'; // Importamos auth
-import  { useToast } from '../componentes/Alert';  // Importa el hook useToast
-// Importa tus componentes de pantalla
-import Home from '../screens/Home';      
-import Configuracion from '../screens/Configuracion';
+import { Platform } from 'react-native';
+import { signOut } from 'firebase/auth';
+import { auth } from '../src/config/firebaseConfig';
+import { useToast } from '../componentes/Alert';
+
+// Pantallas
+import Home from '../screens/Home';
+import Perfil from '../screens/Perfil';
 
 const bottomPadding = Platform.OS === 'ios' ? 22 : 40;
 const Tab = createBottomTabNavigator();
 
-// Función useLogOut eliminada de aquí, se moverá la lógica al scope de screenOptions
+export default function AppTabs({ navigation }) {
+  const { show: showToast } = useToast();
 
-export default function AppTabs() {
-    const { show: showToast } = useToast();
-    // 1. AppTabs ya no recibe 'navigation' directamente
-    return (
-        <Tab.Navigator
-        initialRouteName="InicioTab"
-        
-        // 2. CLAVE: screenOptions debe ser una FUNCIÓN para recibir el objeto 'navigation'
-        screenOptions={({ navigation }) => {
-            // 3. Define la función de cierre de sesión aquí dentro, donde 'navigation' existe
+  return (
+    <Tab.Navigator
+      initialRouteName="InicioTab"
+      screenOptions={{
+        tabBarActiveTintColor: '#000000ff',
+        tabBarInactiveTintColor: 'gray',
+        tabBarLabelStyle: { fontSize: 13, fontWeight: 'bold' },
+        tabBarStyle: {
+          height: 60 + bottomPadding,
+          paddingBottom: bottomPadding,
+          paddingTop: 5,
+        },
+      }}
+    >
+      {/* --- HOME --- */}
+      <Tab.Screen
+        name="InicioTab"
+        component={Home}
+        options={({ navigation }) => ({
+          title: 'Inicio',
+          tabBarIcon: ({ color, size }) => <FontAwesome name="home" color={color} size={size} />,
+          headerTitle: () => (
+            <Image
+              source={require('../assets/logoTinta.png')}
+              style={{ width: 200, height: 80, resizeMode: 'contain' }}
+            />
+          ),
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: 'white',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerRight: () => {
             const handleLogOut = async () => {
-                try {
-                    await signOut(auth);  
-                    showToast({ type: "success", text: "Se cerro sesión correctamente" });
-                    // Navega a la pantalla de Login
-                    navigation.replace('Login');  
-                } catch (error) {
-                    showToast({ type: "error", text: "No se pudo cerrar sesión" });
-                }
+              try {
+                await signOut(auth);
+                showToast({ type: 'success', text: 'Se cerró sesión correctamente' });
+                navigation.replace('Login');
+              } catch (error) {
+                showToast({ type: 'error', text: 'No se pudo cerrar sesión' });
+              }
             };
+            return (
+              <TouchableOpacity onPress={handleLogOut} style={{ marginRight: 15 }}>
+                <FontAwesome name="sign-out" size={24} color="#000000ff" />
+              </TouchableOpacity>
+            );
+          },
+        })}
+      />
 
-            return ({
-                tabBarActiveTintColor: '#000000ff',
-                tabBarInactiveTintColor: 'gray',
-                tabBarLabelStyle: { fontSize: 13, fontWeight: 'bold' },
-                tabBarStyle: {          
-                    height: 60 + bottomPadding, 
-                    paddingBottom: bottomPadding, 
-                    paddingTop: 5, 
-                },
-                headerTitle: () => (
-                    <Image
-                        // REEMPLAZA esta ruta con la ubicación real de tu archivo de logo (e.g., logo.png)
-                        source={require('../assets/logoTinta.png')} 
-                        style={{ width: 200, height: 80, resizeMode: 'contain' }}
-                    />
-                ),
-                headerTitleAlign: 'center',
-                headerShadowVisible: false,
-                headerStyle: { 
-                    backgroundColor: 'white', 
-                    elevation: 0,
-                    shadowOpacity: 0, // Elimina la sombra en iOS
-                },
-
-                // 4. Conecta el botón a la función handleLogOut
-                headerRight: () => (
-                    <TouchableOpacity
-                        onPress={handleLogOut} // <-- CORRECTO: Llama a la función asíncrona de logout
-                        style={{ marginRight: 15 }}
-                    >
-                        <FontAwesome 
-                            name="sign-out"
-                            size={24} 
-                            color="#000000ff" 
-                        />
-                    </TouchableOpacity>
-                ),
-            });
-        }}
-        >
-        {/* Pestaña: INICIO */}
-        <Tab.Screen
-            name="InicioTab"
-            component={Home}
-            options={{
-            title: 'Inicio', // Título que se muestra en la pestaña
-            tabBarIcon: ({ color, size }) => (
-                <FontAwesome name="home" color={color} size={size} />
-            ),
-            }}
-        />
-
-        {/* Pestaña: SETTINGS */}
-        <Tab.Screen
-            name="SettingsTab"
-            component={Configuracion}
-            options={{
-            title: 'Perfil',
-            tabBarIcon: ({ color, size }) => (
-                <FontAwesome name="user" size={size} color={color} />
-            ),
-            }}
-        />
-        </Tab.Navigator>
-    );
+      {/* --- PERFIL --- */}
+      <Tab.Screen
+        name="PerfilTab"
+        component={Perfil}
+        options={({ navigation }) => ({
+          title: 'Perfil',
+          tabBarIcon: ({ color, size }) => <FontAwesome name="user" size={size} color={color} />,
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: '#f9f9f9',
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerTitle: () => (
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000' }}>    Perfil</Text>
+          ),
+          headerTitleAlign: 'left',
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ marginLeft: 15 }}
+              onPress={() => navigation.goBack()}
+            >
+              <FontAwesome name="arrow-left" size={24} color="#000" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+    </Tab.Navigator>
+  );
 }
