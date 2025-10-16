@@ -1,8 +1,11 @@
+import { auth, db } from '../src/config/firebaseConfig';
+
+
+
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../src/config/firebaseConfig';
 import { useModal, useToast } from '../componentes/Alert';
 
 export default function Login({ navigation }) {

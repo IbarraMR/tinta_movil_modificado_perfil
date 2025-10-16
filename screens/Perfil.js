@@ -1,16 +1,44 @@
-import React from 'react';
+import { auth, db } from '../src/config/firebaseConfig';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { doc, getDoc } from 'firebase/firestore';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function Perfil({ navigation }) {
-  const usuario = {
+  const [usuario, setUsuario] = useState({
     nombre: '',
     apellido: '',
     email: '',
     direccion: '',
     telefono: '',
     foto: null,
-  };
+  });
+
+  // Traer datos de Firebase cada vez que la pantalla se enfoque
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchUsuario = async () => {
+        const user = auth.currentUser;
+        if (user) {
+          // Traer datos de Firestore
+          const docRef = doc(db, 'usuarios', user.uid);
+          const docSnap = await getDoc(docRef);
+
+          setUsuario({
+            nombre: user.displayName ? user.displayName.split(' ')[0] : '',
+            apellido: user.displayName ? user.displayName.split(' ')[1] : '',
+            email: user.email || '',
+            direccion: docSnap.exists() ? docSnap.data().direccion || '' : '',
+            telefono: docSnap.exists() ? docSnap.data().telefono || '' : '',
+            foto: user.photoURL || null,
+          });
+        }
+      };
+
+      fetchUsuario();
+    }, [])
+  );
 
   const renderCampo = (label, value, ejemplo) => (
     <View style={styles.inputContainer}>
@@ -42,7 +70,7 @@ export default function Perfil({ navigation }) {
 
       {renderCampo('Nombre', usuario.nombre, 'Rosario')}
       {renderCampo('Apellido', usuario.apellido, 'Ibarra')}
-      {renderCampo('Email', usuario.email, 'roibarra9229@gmail.com')}
+      {renderCampo('Email', usuario.email, 'ejemplo@correo.com')}
       {renderCampo('Dirección', usuario.direccion, 'Calle Falsa 123')}
       {renderCampo('Teléfono', usuario.telefono, '3876157160')}
 
@@ -58,11 +86,11 @@ export default function Perfil({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,          
+    flexGrow: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 25,
     paddingTop: 20,
-    paddingBottom: 40,     
+    paddingBottom: 40,
     alignItems: 'center',
   },
   header: {

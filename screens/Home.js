@@ -1,7 +1,10 @@
+import { auth, db } from '../src/config/firebaseConfig';
+
+
+
 import React ,{useState} from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert, Dimensions, Modal, Pressable , Image} from 'react-native'; 
 import { signOut } from 'firebase/auth';
-import { auth } from '../src/config/firebaseConfig';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { PieChart } from "react-native-chart-kit";
 

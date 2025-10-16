@@ -1,3 +1,6 @@
+import { auth, db } from '../src/config/firebaseConfig';
+
+
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native';
 

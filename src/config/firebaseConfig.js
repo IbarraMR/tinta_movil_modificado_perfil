@@ -1,24 +1,37 @@
 // firebaseConfig.js
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+// Importar funciones necesarias del SDK modular de Firebase
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
+// Configuración de tu proyecto Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCsShG4KoQaZk2n4sHYOpEKY8F9jmMKd_8",
-  authDomain: "tinta-8510b.firebaseapp.com",
-  projectId: "tinta-8510b",
-  storageBucket: "tinta-8510b.appspot.com", // corregido: ".app" → ".appspot.com"
-  messagingSenderId: "861865218686",
-  appId: "1:861865218686:web:4d9e1d58968ec2af13fe2f"
+  apiKey: "AIzaSyCLeSeKge5JY5shRb0Q3It9Nr7ziQSs_Sw",
+  authDomain: "tintamovil-d8a5c.firebaseapp.com",
+  projectId: "tintamovil-d8a5c",
+  storageBucket: "tintamovil-d8a5c.firebasestorage.app",
+  messagingSenderId: "1098297711019",
+  appId: "1:1098297711019:web:026a55d8fb05d618bf9aee",
+  measurementId: "G-S3SX8GHG4W"
 };
 
-// Inicializamos Firebase
+// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 
-// Servicios que vamos a usar
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+// Inicializar Analytics (opcional)
+let analytics;
+try {
+  analytics = getAnalytics(app);
+} catch (e) {
+  console.log("Analytics no disponible en este entorno");
+}
 
-export { auth, db, storage };
+// Inicializar servicios
+const auth = getAuth(app);         // Autenticación
+const db = getFirestore(app);      // Firestore
+const storage = getStorage(app);   // Storage
+
+// Exportar para usar en otros archivos
+export { app, analytics, auth, db, storage };

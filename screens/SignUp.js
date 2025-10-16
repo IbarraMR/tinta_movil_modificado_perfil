@@ -1,7 +1,9 @@
+import { auth, db } from '../src/config/firebaseConfig';
+
+
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image,KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { auth } from '../src/config/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useModal, useToast } from '../componentes/Alert';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
